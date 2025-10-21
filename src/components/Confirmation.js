@@ -2,24 +2,25 @@
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
-function Confirmation() {
+const Confirmation = () => {
   const history = useHistory();
   const location = useLocation();
-  const { flight, passenger } = location.state;
+  const { flight, user } = location.state;
 
   return (
     <div>
-      <h1>Booking Confirmation</h1>
-      <p>Trip Type: {flight.type}</p>
+      <h2>Booking Confirmation</h2>
+      <p>Name: {user.name}</p>
+      <p>Email: {user.email}</p>
+      <p>Phone: {user.phone}</p>
       <p>
-        From {flight.source} to {flight.destination} on {flight.date}
+        Flight: {flight.source} → {flight.destination} ({flight.type})
       </p>
-      <p>Name: {passenger.name}</p>
-      <p>Email: {passenger.email}</p>
-      <p>Phone: {passenger.phone}</p>
-      <button onClick={() => history.push("/")}>Back to Home</button>
+      <p>Date: {flight.date}</p>
+
+      <button onClick={() => history.push("/")}>Go to Home</button>
     </div>
   );
-}
+};
 
 export default Confirmation;

@@ -2,71 +2,56 @@
 import React, { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
-function FlightBooking() {
+const FlightBooking = () => {
   const history = useHistory();
   const location = useLocation();
-  const flight = location.state;
+  const { flight } = location.state;
 
-  const [passenger, setPassenger] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
+  const [user, setUser] = useState({ name: "", email: "", phone: "" });
 
   const handleChange = (e) => {
-    setPassenger({ ...passenger, [e.target.name]: e.target.value });
+    setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    history.push("/confirmation", { flight, passenger });
+  const handleSubmit = () => {
+    if (!user.name || !user.email || !user.phone) {
+      alert("Please fill all details!");
+      return;
+    }
+    history.push({
+      pathname: "/confirmation",
+      state: { flight, user },
+    });
   };
 
   return (
     <div>
-      <h1>Flight Booking</h1>
-      <p>Trip Type: {flight.type}</p>
-      <p>
-        From {flight.source} to {flight.destination} on {flight.date}
-      </p>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Name:
-          <input
-            type="text"
-            name="name"
-            value={passenger.name}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-        <label>
-          Email:
-          <input
-            type="text"
-            name="email"
-            value={passenger.email}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-        <label>
-          Phone:
-          <input
-            type="text"
-            name="phone"
-            value={passenger.phone}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-        <button type="submit">Confirm Booking</button>
-      </form>
+      <h2>Enter Your Details</h2>
+      <input
+        type="text"
+        name="name"
+        placeholder="Name"
+        value={user.name}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="email"
+        placeholder="Email"
+        value={user.email}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="phone"
+        placeholder="Phone"
+        value={user.phone}
+        onChange={handleChange}
+      />
+
+      <button onClick={handleSubmit}>Confirm Booking</button>
     </div>
   );
-}
+};
 
 export default FlightBooking;

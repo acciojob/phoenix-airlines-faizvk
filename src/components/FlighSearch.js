@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
-function FlightSearch() {
+const FlightSearch = () => {
   const history = useHistory();
   const [flight, setFlight] = useState({
     type: "oneway",
@@ -15,63 +15,81 @@ function FlightSearch() {
     setFlight({ ...flight, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Navigate to booking page with flight details
-    history.push("/flight-booking", flight);
+  const handleSearch = () => {
+    if (flight.source && flight.destination && flight.date) {
+      history.push({
+        pathname: "/flight-booking",
+        state: { flight },
+      });
+    } else {
+      alert("Please fill all fields!");
+    }
   };
 
   return (
     <div>
-      <h1>Flight Search</h1>
-      <form onSubmit={handleSubmit}>
+      <h1>Flight Booking App</h1>
+
+      <div>
         <label>
-          Trip Type:
-          <select name="type" value={flight.type} onChange={handleChange}>
-            <option value="oneway">One-way</option>
-            <option value="roundtrip">Round-trip</option>
-          </select>
-        </label>
-        <br />
-        <label>
-          Source:
           <input
-            type="text"
-            name="source"
-            value={flight.source}
+            type="radio"
+            name="type"
+            value="oneway"
+            checked={flight.type === "oneway"}
             onChange={handleChange}
-            required
           />
+          One-way
         </label>
-        <br />
         <label>
-          Destination:
           <input
-            type="text"
-            name="destination"
-            value={flight.destination}
+            type="radio"
+            name="type"
+            value="roundtrip"
+            checked={flight.type === "roundtrip"}
             onChange={handleChange}
-            required
           />
+          Round-trip
         </label>
-        <br />
-        <label>
-          Date:
-          <input
-            type="date"
-            name="date"
-            value={flight.date}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-        <button type="submit" className="book-flight">
-          Book Flight
-        </button>
-      </form>
+      </div>
+
+      <div>
+        <input
+          type="text"
+          name="source"
+          placeholder="Source"
+          value={flight.source}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="destination"
+          placeholder="Destination"
+          value={flight.destination}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="date"
+          placeholder="Date"
+          value={flight.date}
+          onChange={handleChange}
+        />
+      </div>
+
+      <button className="book-flight" onClick={handleSearch}>
+        Search Flights
+      </button>
+
+      {flight.source && flight.destination && flight.date && (
+        <ul>
+          <li>
+            Flight from {flight.source} to {flight.destination} on {flight.date}
+          </li>
+        </ul>
+      )}
     </div>
   );
-}
+};
 
 export default FlightSearch;
