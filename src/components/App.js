@@ -1,13 +1,20 @@
-
 import React from "react";
-import './../styles/App.css';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import FlightSearch from "./FlighSearch";
+import FlightBooking from "./FlightBooking";
+import Confirmation from "./Confirmation";
 
-const App = () => {
+function App() {
   return (
-    <div>
-        {/* Do not remove the main div */}
-    </div>
-  )
+    <Router>
+      <Switch>
+        <Route exact path="/" component={FlightSearch} />
+        <Route exact path="/flight-search" component={FlightSearch} />
+        <Route exact path="/flight-booking" component={FlightBooking} />
+        <Route exact path="/confirmation" component={Confirmation} />
+      </Switch>
+    </Router>
+  );
 }
 
-export default App
+export default App;
