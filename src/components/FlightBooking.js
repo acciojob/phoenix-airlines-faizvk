@@ -1,54 +1,76 @@
-// src/components/FlightBooking.js
 import React, { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
 const FlightBooking = () => {
   const history = useHistory();
   const location = useLocation();
-  const { flight } = location.state;
+  const { flight, tripType, source, destination, date } = location.state || {};
 
-  const [user, setUser] = useState({ name: "", email: "", phone: "" });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-  };
+  if (!flight) {
+    // If someone navigates here without search, redirect to home
+    history.replace("/flight-search");
+    return null;
+  }
 
   const handleSubmit = () => {
-    if (!user.name || !user.email || !user.phone) {
-      alert("Please fill all details!");
+    const newErrors = {};
+    if (!name) newErrors.name = "Name required";
+    if (!email) newErrors.email = "Email required";
+    if (!phone) newErrors.phone = "Phone required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
-    history.push({
-      pathname: "/confirmation",
-      state: { flight, user },
+
+    history.push("/confirmation", {
+      flight,
+      tripType,
+      source,
+      destination,
+      date,
+      name,
+      email,
+      phone,
     });
   };
 
   return (
     <div>
-      <h2>Enter Your Details</h2>
-      <input
-        type="text"
-        name="name"
-        placeholder="Name"
-        value={user.name}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="email"
-        placeholder="Email"
-        value={user.email}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="phone"
-        placeholder="Phone"
-        value={user.phone}
-        onChange={handleChange}
-      />
-
+      <h1>Flight Booking Form</h1>
+      <p>Flight: {flight}</p>
+      <div>
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
+      </div>
+      <div>
+        <input
+          type="text"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+      </div>
+      <div>
+        <input
+          type="text"
+          placeholder="Phone"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+        {errors.phone && <p style={{ color: "red" }}>{errors.phone}</p>}
+      </div>
       <button onClick={handleSubmit}>Confirm Booking</button>
     </div>
   );
