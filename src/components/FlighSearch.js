@@ -11,12 +11,20 @@ const FlightSearch = () => {
     date: "",
   });
 
+  const [searchResults, setSearchResults] = useState([]);
+
   const handleChange = (e) => {
     setFlight({ ...flight, [e.target.name]: e.target.value });
   };
 
   const handleSearch = () => {
     if (flight.source && flight.destination && flight.date) {
+      // Mock flight availability for Cypress
+      const results = [
+        `Flight from ${flight.source} to ${flight.destination} on ${flight.date}`,
+      ];
+      setSearchResults(results);
+
       history.push({
         pathname: "/flight-booking",
         state: { flight },
@@ -28,7 +36,7 @@ const FlightSearch = () => {
 
   return (
     <div>
-      <h1>Flight Booking App</h1>
+      <h1>Welcome to Flight Booking App</h1>
 
       <div>
         <label>
@@ -81,13 +89,11 @@ const FlightSearch = () => {
         Search Flights
       </button>
 
-      {flight.source && flight.destination && flight.date && (
-        <ul>
-          <li>
-            Flight from {flight.source} to {flight.destination} on {flight.date}
-          </li>
-        </ul>
-      )}
+      <ul>
+        {searchResults.map((f, idx) => (
+          <li key={idx}>{f}</li>
+        ))}
+      </ul>
     </div>
   );
 };
